@@ -13,7 +13,7 @@ from urllib.parse import urlencode
 import json
 
 
-DEFAULT_BASE_URL = "pipeline:8080"
+DEFAULT_BASE_URL = "http://pipeline:8080/%s"
 
 
 def score_text(text, url=None):
