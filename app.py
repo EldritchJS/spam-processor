@@ -31,8 +31,10 @@ def consumer(args):
     consumer = kafka.KafkaConsumer(args.topic, bootstrap_servers=args.brokers)
     for msg in consumer:
         if exit_event.is_set():
+            logging.info("exiting upon request")
             break
         try:
+            logging.info("scoring a message")
             score_text(json.loads(str(msg.value, 'utf-8'))["text"])
         except Exception as e:
             logging.error(e.message)
@@ -56,9 +58,9 @@ def main(args):
     cons = threading.Thread(group=None, target=consumer, args=(args,))
     cons.start()
 
-    exit_event.set()
+    # exit_event.set()
     cons.join()
-    logging.info('exiting flask-kafka-listener')
+    logging.info('exiting spam-processor')
 
 
 if __name__ == '__main__':
