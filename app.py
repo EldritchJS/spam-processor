@@ -29,12 +29,15 @@ def score_text(text, url=None):
 def consumer(args):
     logging.info('starting kafka consumer')
     consumer = kafka.KafkaConsumer(args.topic, bootstrap_servers=args.brokers)
+    msg_count = 0
     for msg in consumer:
         if exit_event.is_set():
             logging.info("exiting upon request")
             break
         try:
-            logging.info("scoring a message")
+            msg_count = msg_count + 1
+            if msg_count % 100 == 0:
+                logging.info("scoring message %d" % msg_count)
             score_text(json.loads(str(msg.value, 'utf-8'))["text"])
         except Exception as e:
             logging.error(e.message)
